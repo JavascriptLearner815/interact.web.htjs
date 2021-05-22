@@ -44,5 +44,5 @@ module.exports = {
       return this.textInternalSecure = String(newContent)
     }
   },
-  
+  getHTMLCode // EXPERIMENTAL: Needs its own implementation of package in <script> tags so website works as expected, needs meta tags, title, etc.
 }
