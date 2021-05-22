@@ -1,5 +1,18 @@
+"use strict"
+
+const jsdom = require("jsdom")
+const { JSDOM } = jsdom
+const dom = new JSDOM("<!DOCTYPE html>", { pretendToBeVisual: true })
+const { window } = dom
+const { document } = (dom).window
+
 function* buttonIDGen(buttonIDVar) {
   yield ++buttonIDVar
+}
+
+function getHTMLCode() {
+  // EXPERIMENTAL: Needs its own implementation of package in <script> tags so website works as expected, needs meta tags, title, etc.
+  return `<!DOCTYPE html><html>${document.querySelector("html").innerHTML}</html>`
 }
 
 let buttonIDVar = 0
@@ -28,8 +41,8 @@ module.exports = {
       return String(this.textInternalSecure)
     }
     set text(newContent) {
-      // Just noticed that document will never be defined, archiving until I find a way to use it
       return this.textInternalSecure = String(newContent)
     }
-  }
+  },
+  
 }
