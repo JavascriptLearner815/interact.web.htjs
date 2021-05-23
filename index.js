@@ -72,6 +72,13 @@ module.exports = {
       this.updateOptionsInternalSecure()
     }
   },
-  getHTMLCode // EXPERIMENTAL: Needs its own implementation of package in <script> tags so website works as expected, needs meta tags, title, etc., untested
+  getHTMLCode, // EXPERIMENTAL: Needs its own implementation of package in <script> tags so website works as expected, needs meta tags, title, etc., untested
+  Equality: class Equality {
+    // EXPERIMENTAL: Untested
+    constructor(val1, val2) {
+      this.val1 = val1
+      this.val2 = val2
+      this.res = this.val1 === this.val2 || Number.isNaN(this.val1) && Number.isNaN(this.val2) // Number.isNaN() used instead of isNaN() is important since its property on Number only works for numbers, thus only matching NaN and not impossible numbers like true.
+  }
 }
 }
