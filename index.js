@@ -1,3 +1,4 @@
+{
 "use strict"
 
 const jsdom = require("jsdom")
@@ -11,7 +12,7 @@ function* buttonIDGen(buttonIDVar) {
 }
 
 function getHTMLCode() {
-  // EXPERIMENTAL: Needs its own implementation of package in <script> tags so website works as expected, needs meta tags, title, etc.
+  // EXPERIMENTAL: Needs its own implementation of package in <script> tags so website works as expected, needs meta tags, title, etc., untested
   return `<!DOCTYPE html><html>${document.querySelector("html").innerHTML}</html>`
 }
 
@@ -20,14 +21,15 @@ const buttonIDGenerator = buttonIDGen(buttonIDVar)
 
 module.exports = {
   Button: class Button {
+    // EXPERIMENTAL: Untested
     constructor(text = `Button${buttonIDGenerator.next().value}`, listener = undefined, options = { pureText: false }) {
-      this.textInternalSecure = String(text)
-      this.listenerInternalSecure = Function(listener)
+      this.textInternalSecure = String(text) || `Button${buttonIDGenerator.next().value}`
+      this.listenerInternalSecure = Function(listener) || undefined
       this.optionsInternalSecure = Object(options) || { pureText: false }
-      if (typeof this.optionsInternalSecure !== "object") this.optionsInternalSecure = { pureText: false }
-      if (this.optionsInternalSecure.pureText == null) this.optionsInternalSecure.pureText = false
+      this.updateOptionsInternalSecure()
       this.dangerouslyUsedElement = document.createElement("button")
       this.updateTextInternalSecure()
+      this.updateListenerInternalSecure()
       document.body.appendChild(this.dangerouslyUsedElement)
     }
     updateTextInternalSecure() {
@@ -37,12 +39,39 @@ module.exports = {
         this.dangerouslyUsedElement.innerText = String(this.textInternalSecure)
       }
     }
+    updateListenerInternalSecure() {
+      if (this.listenerInternalSecure) {
+        this.dangerouslyUsedElement.addEventListener("click", Function(this.listenerInternalSecure))
+      }
+    }
+    updateOptionsInternalSecure() {
+      if (typeof this.optionsInternalSecure !== "object") this.optionsInternalSecure = { pureText: false }
+      if (this.optionsInternalSecure.pureText == null) this.optionsInternalSecure.pureText = false
+    }
     get text() {
       return String(this.textInternalSecure)
     }
     set text(newContent) {
-      return this.textInternalSecure = String(newContent)
+      this.textInternalSecure = String(newContent)
+      this.updateTextInternalSecure()
+      return String(this.textInternalSecure)
+    }
+    get click() {
+      return Function(this.listenerInternalSecure)
+    }
+    set click(newContent) {
+      this.listenerInternalSecure = Function(newContent)
+      this.updateListenerInternalSecure()
+      return Function(this.listenerInternalSecure)
+    }
+    get options() {
+      return Object(this.optionsInternalSecure)
+    }
+    set options(newContent) {
+      this.optionsInternalSecure = Object(newContent) || { pureText: false }
+      this.updateOptionsInternalSecure()
     }
   },
-  getHTMLCode // EXPERIMENTAL: Needs its own implementation of package in <script> tags so website works as expected, needs meta tags, title, etc.
+  getHTMLCode // EXPERIMENTAL: Needs its own implementation of package in <script> tags so website works as expected, needs meta tags, title, etc., untested
+}
 }
