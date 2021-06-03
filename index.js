@@ -3,11 +3,12 @@
 
 const jsdom = require("jsdom")
 const { JSDOM } = jsdom
-const dom = new JSDOM("<!DOCTYPE html>", { pretendToBeVisual: true })
+const dom = new JSDOM("<!DOCTYPE html>", { pretendToBeVisual: true }) // EXPERIMENTAL: Untested
 const { window } = dom
 const { document } = (dom).window
 
 function* buttonIDGen(buttonIDVar) {
+  // EXPERIMENTAL: Untested
   yield ++buttonIDVar
 }
 
@@ -79,6 +80,9 @@ module.exports = {
       this.val1 = val1
       this.val2 = val2
       this.res = this.val1 === this.val2 || Number.isNaN(this.val1) && Number.isNaN(this.val2) // Number.isNaN() used instead of isNaN() is important since its property on Number only works for numbers, thus only matching NaN and not impossible numbers like true.
+    }
   }
+  },
+  navigator: window.navigator // EXPERIMENTAL: Untested
 }
 }
