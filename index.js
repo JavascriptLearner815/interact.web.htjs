@@ -31,7 +31,7 @@ document.body.appendChild(styleElem)
   
   class Button {
     // EXPERIMENTAL: Untested
-    constructor(text = `Button${buttonIDGenerator.next().value}`, listener = undefined, options = { pureText: false }) {
+    constructor(text = `Button${buttonIDGenerator.next().value}`, listener = undefined, options = { pureText: false }) { // COMING SOON: id
       this.textInternalSecure = String(text) || `Button${buttonIDGenerator.next().value}`
       this.listenerInternalSecure = Function(listener) || undefined
       this.optionsInternalSecure = Object(options) || { pureText: false }
