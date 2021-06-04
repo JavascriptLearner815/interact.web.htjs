@@ -20,6 +20,12 @@ function getHTMLCode() {
 let buttonIDVar = 0
 const buttonIDGenerator = buttonIDGen(buttonIDVar)
 
+let stylerCreated = false
+let style = ""
+const styleElem = document.createElement("style")
+styleElem.innerHTML = style
+document.body.appendChild(styleElem)
+
 module.exports = {
   Button: class Button {
     // EXPERIMENTAL: Untested
@@ -83,6 +89,32 @@ module.exports = {
     }
   }
   },
-  navigator: window.navigator // EXPERIMENTAL: Untested
+  DuplicationError: class DuplicationError extends Error {
+    // EXPERIMENTAL: Untested
+    constructor(message) {
+      super(message)
+      this.name = "DuplicationError"
+    }
+  },
+  Styler: class Styler {
+    // EXPERIMENTAL: Untested
+    constructor() {
+      if (stylerCreated) throw new DuplicationError("Cannot duplicate styler")
+      stylerCreated = true
+      this.updateStylesInternalSecure()
+    }
+    updateStylesInternalSecure() {
+      return styleElem.innerHTML = style
+    }
+    get styles() {
+      return String(style)
+    }
+    set styles(content) {
+      style = String(content)
+      return this.updateStylesInternalSecure()
+    }
+  },
+  navigator: window.navigator, // EXPERIMENTAL: Untested
+  userStorage: window.localStorage // EXPERIMENTAL: Untested
 }
 }
