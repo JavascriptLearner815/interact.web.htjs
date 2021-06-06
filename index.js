@@ -217,7 +217,7 @@ document.body.appendChild(styleElem)
   
   class MediaRequest {
     // EXPERIMENTAL: Untested
-    constructor(videoElement = undefined, options = { mic: true, cam: { width: { min: 240, want: videoElement.width, need: false, max: 2098 }, height: { min: 240, want: videoElement.height, need: false, max: 2098 }, face: { want: "front", need: false }, fps: { min: 30, want: 60, need: false, max: 240 } } }) {
+    constructor(videoElement = undefined, options /* Iunno how to destructure this */ = { mic: true, cam: { width: { min: 240, want: videoElement.width, need: false, max: 2098 }, height: { min: 240, want: videoElement.height, need: false, max: 2098 }, face: { want: "front", need: false }, fps: { min: 30, want: 60, need: false, max: 240 } } }) {
       !(videoElement instanceof Video) ? throw new TypeError("Video element must be a video!") : this.videoElementInternalSecure = videoElement.dangerouslyUsedElement
       this.optionsInternalSecure = Object(options) || { mic: true, cam: { width: { min: 240, want: videoElement.width, need: false, max: 2098 }, height: { min: 240, want: videoElement.height, need: false, max: 2098 }, face: { want: "front", need: false }, fps: { min: 30, want: 60, need: false, max: 240 } } }
       
