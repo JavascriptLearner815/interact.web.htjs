@@ -1,4 +1,6 @@
+// EXPERIMENTAL: Untested
 {
+// EXPERIMENTAL: Untested
 // FIXME: Assuming Primitive(impossible) == null instead of impossible
 // TODO: Store default values into variables for their obvious other usages
   
@@ -18,6 +20,22 @@ function* buttonIDGen(buttonIDVar) {
 function getHTMLCode() {
   // EXPERIMENTAL: Needs its own implementation of package in <script> tags so website works as expected, needs meta tags, title, etc., untested
   return `<!DOCTYPE html><html>${document.querySelector("html").innerHTML}</html>`
+}
+
+function parseCustomConstraintObjectErrorHandling(constraints) {
+  // EXPERIMENTAL: Untested
+  
+}
+  
+function parseCustomConstraintObject(constraints) {
+  // EXPERIMENTAL: Untested
+  
+}
+  
+function parseCustomConstraintObjectWithErrorHandling(constraints) {
+  // EXPERIMENTAL: Untested
+  const refinedConstraints = parseCustomConstraintObjectErrorHandling(constraints)
+  return parseCustomConstraintObject(refinedConstraints)
 }
 
 let buttonIDVar = 0
@@ -199,10 +217,66 @@ document.body.appendChild(styleElem)
   
   class MediaRequest {
     // EXPERIMENTAL: Untested
-    constructor(videoElement = undefined, options = { mic: true, cam: { width: { min: 240, want: videoElement.width, need: false, max: 2098 }, height: { min: 240, want: videoElement.height, need: false, max: 2098 }, face: { want: "front", need: false }, fps: { min: 30, want: 60, need: false, max: Number.POSITIVE_INFINITY } } }) {
+    constructor(videoElement = undefined, options = { mic: true, cam: { width: { min: 240, want: videoElement.width, need: false, max: 2098 }, height: { min: 240, want: videoElement.height, need: false, max: 2098 }, face: { want: "front", need: false }, fps: { min: 30, want: 60, need: false, max: 240 } } }) {
       !(videoElement instanceof Video) ? throw new TypeError("Video element must be a video!") : this.videoElementInternalSecure = videoElement.dangerouslyUsedElement
-      this.optionsInternalSecure = Object(options) || { mic: true, cam: { width: { min: 240, want: videoElement.width, need: false, max: 2098 }, height: { min: 240, want: videoElement.height, need: false, max: 2098 }, face: { want: "front", need: false }, fps: { min: 30, want: 60, need: false, max: Number.POSITIVE_INFINITY } } }
-      // COMPLETEME: I am too tired to finish this.
+      this.optionsInternalSecure = Object(options) || { mic: true, cam: { width: { min: 240, want: videoElement.width, need: false, max: 2098 }, height: { min: 240, want: videoElement.height, need: false, max: 2098 }, face: { want: "front", need: false }, fps: { min: 30, want: 60, need: false, max: 240 } } }
+      
+      if (!("mic" in this.optionsInternalSecure)) this.optionsInternalSecure.mic = true
+      if (!("cam" in this.optionsInternalSecure)) this.optionsInternalSecure.cam = { width: { min: 240, want: videoElement.width, need: false, max: 2098 }, height: { min: 240, want: videoElement.height, need: false, max: 2098 }, face: { want: "front", need: false }, fps: { min: 30, want: 60, need: false, max: 240 } }
+      if (!("width" in this.optionsInternalSecure.cam)) this.optionsInternalSecure.cam.width = { min: 240, want: videoElement.width, need: false, max: 2098 }
+      if (!("min" in this.optionsInternalSecure.cam.width)) this.optionsInternalSecure.cam.width.min = 240
+      if (!("want" in this.optionsInternalSecure.cam.width)) this.optionsInternalSecure.cam.width.want = videoElement.width
+      if (!("need" in this.optionsInternalSecure.cam.width)) this.optionsInternalSecure.cam.width.need = false
+      if (!("max" in this.optionsInternalSecure.cam.width)) this.optionsInternalSecure.cam.width.max = 2098
+      if (!("height" in this.optionsInternalSecure.cam)) this.optionsInternalSecure.cam.height = { min: 240, want: videoElement.height, need: false, max: 2098 }
+      if (!("min" in this.optionsInternalSecure.cam.height)) this.optionsInternalSecure.cam.height.min = 240
+      if (!("want" in this.optionsInternalSecure.cam.height)) this.optionsInternalSecure.cam.height.want = videoElement.height
+      if (!("need" in this.optionsInternalSecure.cam.height)) this.optionsInternalSecure.cam.height.need = false
+      if (!("max" in this.optionsInternalSecure.cam.height)) this.optionsInternalSecure.cam.height.max = 2098
+      if (!("face" in this.optionsInternalSecure.cam)) this.optionsInternalSecure.face = { want: "front", need: false }
+      if (!("want" in this.optionsInternalSecure.cam.face)) this.optionsInternalSecure.face.want = "front"
+      if (!("need" in this.optionsInternalSecure.cam.face)) this.optionsInternalSecure.face.need = false
+      if (!("fps" in this.optionsInternalSecure.cam)) this.optionsInternalSecure.fps = { min: 30, want: 60, need: false, max: 240 }
+      if (!("min" in this.optionsInternalSecure.cam.fps)) this.optionsInternalSecure.fps.min = 30
+      if (!("want" in this.optionsInternalSecure.cam.fps)) this.optionsInternalSecure.fps.want = 60
+      if (!("need" in this.optionsInternalSecure.cam.fps)) this.optionsInternalSecure.fps.need = false
+      if (!("max" in this.optionsInternalSecure.cam.fps)) this.optionsInternalSecure.fps.max = 240 // Woah.
+      
+      this.reparsedOptionsInternalSecure = Object(parseCustomConstraintObjectWithErrorHandling(this.optionsInternalSecure)) // TODO: Reparse options to work with the actual getUserMedia
+      
+      // FIXME: Does not use adapter.js for constraint editing
+      if (navigator.mediaDevices === undefined) {
+        navigator.mediaDevices = {}
+      }
+      
+      if (navigator.mediaDevices.getUserMedia === undefined) {
+        navigator.mediaDevices.getUserMedia = function(constraints) {
+          const getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia
+          
+          if (!getUserMedia) {
+            return Promise.reject(new ReferenceError("getUserMedia is not implemented in this browser"))
+          }
+          
+          return new Promise(function(resolve, reject) {
+            getUserMedia.call(navigator, constraints, resolve, reject)
+          })
+        }
+      }
+      
+      navigator.mediaDevices.getUserMedia(this.reparsedOptionsInternalSecure)
+      .then(function(stream) {
+        if ("srcObject" in this.videoElementInternalSecure) {
+          this.videoElementInternalSecure.srcObject = stream
+        } else {
+          this.videoElementInternalSecure.src = window.URL.createObjectURL(stream)
+        }
+        this.videoElementInternalSecure.onloadedmetadata = function(e) {
+          video.play()
+        }
+      })
+      .catch(function(err) {
+        console.error(`${err.name}: ${err.message}`)
+      })
     }
   }
   
