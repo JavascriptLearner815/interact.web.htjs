@@ -251,7 +251,7 @@ document.body.appendChild(styleElem)
       
       if (navigator.mediaDevices.getUserMedia === undefined) {
         navigator.mediaDevices.getUserMedia = function(constraints) {
-          const getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia
+          const getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.oGetUserMedia || navigator.msGetUserMedia || navigator.getUserMedia
           
           if (!getUserMedia) {
             return Promise.reject(new ReferenceError("getUserMedia is not implemented in this browser"))
