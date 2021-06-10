@@ -214,8 +214,6 @@ document.body.appendChild(styleElem)
     }
   }
   
-  const navigator = window.navigator // EXPERIMENTAL: Untested
-  
   class MediaRequest {
     // EXPERIMENTAL: Untested
     constructor(videoElement = undefined, options /* Iunno how to destructure this */ = { mic: true, cam: { width: { min: 240, want: videoElement.width, need: false, max: 2098 }, height: { min: 240, want: videoElement.height, need: false, max: 2098 }, face: { want: "front", need: false }, fps: { min: 30, want: 60, need: false, max: 240 } } }) {
