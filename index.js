@@ -10,6 +10,7 @@ const jsdom = require("jsdom")
 const { JSDOM } = jsdom
 const dom = new JSDOM("<!DOCTYPE html>", { pretendToBeVisual: true }) // EXPERIMENTAL: Untested
 const { window } = dom
+const { navigator } = window
 const { document } = (dom).window
 
 function* buttonIDGen(buttonIDVar) {
